@@ -60,9 +60,7 @@ pub fn App() -> impl IntoView {
             <main>
                 <Routes>
                     <Route path="/" view=HomePage/>
-                </Routes>
-                <Routes>
-                    <Route path="/challange" view=HomePage/>
+                    <Route path="/challange/:id" view=ChallangeSite/>
                 </Routes>
             </main>
         </Router>
