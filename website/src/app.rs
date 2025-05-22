@@ -7,8 +7,6 @@ use leptos_use::{use_interval, UseIntervalReturn};
 use serde::{self, Deserialize, Serialize};
 use std::cmp::{max, min};
 
-type KEY = usize;
-
 #[cfg(feature = "ssr")]
 pub mod ssr {
     //use crate::app::{MachineS, MachineState, KEY};
@@ -67,14 +65,6 @@ pub fn App() -> impl IntoView {
     }
 }
 
-#[server(getChallanges)]
-pub async fn get_challanges() -> Result<Vec<Challange>, ServerFnError> {
-    return Ok(vec![
-        Challange::new("challange a", 1, "nothing given"),
-        Challange::new("challange a", 1, "nothing given"),
-    ]);
-}
-
 /// Renders the home page of your application.
 #[component]
 fn HomePage() -> impl IntoView {
@@ -85,20 +75,8 @@ fn HomePage() -> impl IntoView {
       <div class="container">
          <h1 class="heading"> ESP LSD HACKING</h1>
       </div>
+      <ChallangeList/>
       //<Challange name="test"/>
-      <ul class="challanges" role="list">
-
-      <Await
-        future =|| get_challanges()
-        let:data
-      >
-      {
-          data.to_owned().unwrap_or_default().into_iter().enumerate().map(|(idx, m)| view! {
-      <ChallangeC name={m.name}/>
-          }).collect_view()
-     }
-      </Await>
-      </ul>
      </div>
     </div>
      }
