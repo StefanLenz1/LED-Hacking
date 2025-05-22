@@ -11,6 +11,8 @@ use leptos_use::{use_interval, UseIntervalReturn};
 use serde::{self, Deserialize, Serialize};
 use std::cmp::{max, min};
 
+use crate::structs::*;
+
 #[component]
 pub fn ChallangeC(name: impl ToString) -> impl IntoView {
     view! {
@@ -19,8 +21,12 @@ pub fn ChallangeC(name: impl ToString) -> impl IntoView {
 }
 
 #[server(GetChallangeSite)]
-pub async fn get_challange_site(id: u64) -> Result<Challange, ServerFnError> {
-    return Ok(Challange::new(id.to_string(), id, format!("{}", id)));
+pub async fn get_challange_site(id: u64) -> Result<ChallangeWContent, ServerFnError> {
+    return Ok(ChallangeWContent::new(
+        id.to_string(),
+        id,
+        format!("{}", id),
+    ));
 }
 
 #[component]
@@ -30,38 +36,37 @@ pub fn ChallangeSite() -> impl IntoView {
         future =|| get_challange_site(1)
         let:data
             >
-            <div> {data.to_owned().unwrap().id} </div>
+            <div> {data.to_owned().unwrap().challange.id} </div>
             <CodeView/>
         </Await>
     }
 }
 
-impl Challange {
-    pub fn new(name: impl ToString, id: u64, content_given: impl ToString) -> Self {
-        return Self {
-            name: name.to_string(),
-            id: id,
-            content: ChallangeContent {
-                given: content_given.to_string(),
-            },
-        };
+#[server(getChallanges)]
+pub async fn get_challanges() -> Result<Vec<Challange>, ServerFnError> {
+    return Ok(vec![
+        Challange::new("challange a", 1, false),
+        Challange::new("challange a", 1, false),
+    ]);
+}
+
+#[component]
+pub fn ChallangeList() -> impl IntoView {
+    view! {
+
+      <ul class="challanges" role="list">
+
+      <Await
+        future =|| get_challanges()
+        let:data
+      >
+      {
+
+          data.to_owned().unwrap_or_default().into_iter().map(|m| view! {
+      <ChallangeC name={m.name}/>
+          }).collect_view()
+     }
+      </Await>
+      </ul>
     }
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct ChallangeContent {
-    pub given: String,
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct Challange {
-    pub name: String,
-    pub id: u64,
-    pub content: ChallangeContent,
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct ChallangeSubmit {
-    pub content: ChallangeContent,
-    pub id: u64,
 }
