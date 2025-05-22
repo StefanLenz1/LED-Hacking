@@ -1,0 +1,1 @@
+void make_pattern(void* led_object);
