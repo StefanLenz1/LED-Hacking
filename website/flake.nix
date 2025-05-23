@@ -17,6 +17,7 @@
             cargo
             # openssl
             # pkg-config
+            trunk
             rust-analyzer
             cargo-leptos
             lld

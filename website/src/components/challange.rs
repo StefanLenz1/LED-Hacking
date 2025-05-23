@@ -1,10 +1,11 @@
 use crate::components::challange::components::A;
 use crate::components::*;
 use crate::error_template::{AppError, ErrorTemplate};
+use leptos::Params;
+use leptos::ev::SubmitEvent;
 use leptos::prelude::*;
 use leptos::prelude::*;
 use leptos::task::spawn_local;
-use leptos::Params;
 use leptos::*;
 use leptos::*;
 use leptos::*;
@@ -14,7 +15,7 @@ use leptos_router::hooks::use_params;
 use leptos_router::nested_router::Outlet;
 use leptos_router::*;
 use leptos_router::*;
-use leptos_use::{use_interval, UseIntervalReturn};
+use leptos_use::{UseIntervalReturn, use_interval};
 use serde::{self, Deserialize, Serialize};
 use std::cmp::{max, min};
 use std::fs::File;
@@ -62,7 +63,7 @@ pub async fn reset_controller() -> Result<(), ServerFnError> {
 }
 
 #[component]
-pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
+pub fn ChallangeSite(data: ChallangeWContent) -> impl IntoView {
     let ChallangeWContent {
         challange: challange,
         content: challange_content,
@@ -88,13 +89,27 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
     //<ActionFrom action=submit_code>
     //</ActionFrom>
     //
-    let (reset_count, reset_count_set) = signal(0);
+    //
+    //
+    let code_input_element: NodeRef<html::Input> = NodeRef::new();
+    let on_submit_code = move |ev: SubmitEvent| {
+        ev.prevent_default();
+        let value = code_input_element
+            .get()
+            .expect("input should be mounted")
+            .value();
+        //set_code_input.set(value);
+        //submit_code.dispatch(SubmitCode { content: value });
+    };
 
+    let (code, set_code) = signal("intial code".to_string());
     view! {
-    <ActionForm action=submit_code attr:class="from">
+    <form on:submit=on_submit_code >
         <div>
         <input type="submit" value="upload"/>
-        <input type="text" name="content"></input>
+        <textarea prop:value=move | | code_input.get() on:input:target=move |ev| set_code_input.set(ev.target().value()) >{
+            code_input
+        }</textarea>
         </div>
 
         <div>
@@ -114,7 +129,7 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
        //     });}
        //>upload code</button>
        //
-    </ActionForm>
+    </form>
 
 
     //<Form action=clear_code>
@@ -180,14 +195,14 @@ pub fn ChallangePageGiven() -> impl IntoView {
         future =get_challange_site_hint(id())
         let:data
             >
-            <ChallangeSiteHint data=data.as_ref().unwrap()/>
+            <ChallangeSiteHint data=data.clone().unwrap()/>
         </Await>
     }
 }
 
 #[component]
 
-pub fn ChallangeSiteHint<'a>(data: &'a String) -> impl IntoView {
+pub fn ChallangeSiteHint(data: String) -> impl IntoView {
     view! {
         <div> {data.clone()} </div>
     }
@@ -203,7 +218,7 @@ pub fn ChallangePage() -> impl IntoView {
         future =get_challange_site(id())
         let:data
             >
-            <ChallangeSite data=data.as_ref().unwrap()/>
+            <ChallangeSite data=data.clone().unwrap()/>
         </Await>
     }
 }

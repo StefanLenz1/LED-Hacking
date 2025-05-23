@@ -11,8 +11,6 @@ pub mod structs;
 pub fn hydrate() {
     use crate::app::*;
     use leptos::mount::mount_to_body;
-
-    use leptos::prelude::*;
     console_error_panic_hook::set_once();
     mount_to_body(App);
 }
