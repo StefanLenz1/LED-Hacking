@@ -1,7 +1,7 @@
-pub mod app;
-pub mod components;
-pub mod error_template;
-pub mod structs;
+//pub mod app;
+//pub mod components;
+//pub mod error_template;
+//pub mod structs;
 
 //#[cfg(feature = "ssr")]
 //pub mod fileserv;
@@ -9,7 +9,7 @@ pub mod structs;
 //#[wasm_bindgen::prelude::wasm_bindgen]
 
 pub fn hydrate() {
-    use crate::app::*;
+    use esp_lsd_hacking::app::*;
     use leptos::mount::mount_to_body;
 
     use leptos::prelude::*;
