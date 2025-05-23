@@ -1,14 +1,15 @@
 pub mod app;
 pub mod components;
 pub mod error_template;
-#[cfg(feature = "ssr")]
-pub mod fileserv;
 pub mod structs;
 
+//#[cfg(feature = "ssr")]
+//pub mod fileserv;
 #[cfg(feature = "hydrate")]
 #[wasm_bindgen::prelude::wasm_bindgen]
 pub fn hydrate() {
     use crate::app::*;
+    use leptos::mount::mount_to_body;
     console_error_panic_hook::set_once();
-    leptos::mount_to_body(App);
+    mount_to_body(App);
 }

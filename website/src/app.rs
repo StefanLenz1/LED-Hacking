@@ -3,7 +3,7 @@ use crate::error_template::{AppError, ErrorTemplate};
 use leptos::prelude::*;
 use leptos::*;
 use leptos_meta::*;
-use leptos_router::*;
+use leptos_router::components::*;
 use leptos_use::{use_interval, UseIntervalReturn};
 use serde::{self, Deserialize, Serialize};
 use std::cmp::{max, min};
@@ -35,6 +35,7 @@ pub mod ssr {
 #[component]
 pub fn App() -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
+    use leptos_router::path;
     provide_meta_context();
 
     view! {
@@ -46,21 +47,22 @@ pub fn App() -> impl IntoView {
 
         // sets the document title
         <Title text="ESP LSD HACKING"/>
+        <head/>
 
         // content for this welcome page
-        <Router fallback=|| {
+        <Router>
+            <main>
+                <Routes fallback =|| {
             let mut outside_errors = Errors::default();
             outside_errors.insert_with_default_key(AppError::NotFound);
             view! {
                 <ErrorTemplate outside_errors/>
             }
             .into_view()
-        }>
-            <main>
-                <Routes>
-                    <Route path="/" view=HomePage/>
-                    <Route path="/challange" view =ChallangeList/>
-                    <Route path="/challange/:id" view=ChallangeSite/>
+        } >
+                    <Route path=path!("/") view=HomePage/>
+                    <Route path=path!("/challange") view =ChallangeList/>
+                    <Route path=path!("/challange/:id") view=ChallangePage/>
                 </Routes>
             </main>
         </Router>
