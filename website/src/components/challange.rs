@@ -24,38 +24,52 @@ pub fn ChallangeC(name: impl ToString) -> impl IntoView {
 #[server(GetChallangeSite)]
 pub async fn get_challange_site(id: u64) -> Result<ChallangeWContent, ServerFnError> {
     return Ok(ChallangeWContent::new(
-        id.to_string(),
+        format!("challange number {}", (id)),
         id,
-        format!("{}", id),
+        format!("content start {} content end", id),
     ));
 }
 
 #[component]
 pub fn ChallangeSite() -> impl IntoView {
-    //let params = use_params_map();
     let params = use_params::<ChallangeSiteParams>();
 
-    // id: || -> usize
-    //let id = move || {
-    //    params
-    //        .read()
-    //        .as_ref()
-    //        .ok()
-    //        .and_then(|params| params.id)
-    //        .unwrap_or_default()
-    //};
+    let id = move || params.get().unwrap().id.unwrap();
     view! {
+
+
         <Await
-        future =|| get_challange_site(1)
+        future =move || get_challange_site(id())
         let:data
 
             >
-            <div> {
 
-                let id = move || params.get().unwrap().id;
-                id
+            {
+                let ChallangeWContent{challange: challange, content: challange_content} = data.as_ref().unwrap();
+                let ChallangeContent{given: challange_content_given} = challange_content;
+                let Challange{id: challange_id , name: challange_name, done: challange_done} = challange;
 
-            } </div>
+
+
+                view!{
+                      <div > {
+
+                          challange_name
+                      } </div>
+
+                      <div> {
+
+                          challange.id
+
+                      } </div>
+
+                      <div> {
+
+                          challange_content_given
+
+                      } </div>
+                   }
+             }
 
             <CodeView/>
         </Await>
@@ -65,8 +79,8 @@ pub fn ChallangeSite() -> impl IntoView {
 #[server(getChallanges)]
 pub async fn get_challanges() -> Result<Vec<Challange>, ServerFnError> {
     return Ok(vec![
-        Challange::new("challange a", 1, false),
-        Challange::new("challange a", 1, false),
+        Challange::new("challange 1", 1, false),
+        Challange::new("challange 2", 2, false),
     ]);
 }
 
