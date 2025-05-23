@@ -1,23 +1,27 @@
-#include <FastLED.h>
 #include "../accessable/safe_led.h"
 #include "internal.h"
+#include <stdlib.h>
 
-struct safe_led {
-    size_t size;
-    CRGB leds[64];
+struct __attribute__((packed)) safe_led {
     uint8_t limit_width;
     uint8_t limit_height;
+    Colorcode leds[64];
+    uint8_t size;
+
 };
 
 void* create_safe_led(int led_count, uint8_t limit_width_, uint8_t limit_height_) {
-    size_t struct_size = sizeof(safe_led);
-    size_t leds_size = led_count * sizeof(CRGB);
+    uint8_t struct_size = sizeof(safe_led);
+    uint8_t leds_size = led_count * sizeof(Colorcode);
     safe_led* new_struct = (safe_led*) malloc(struct_size);
+    safe_led zero_struct = {0};
+    *new_struct = zero_struct;
     new_struct->size = led_count;
     new_struct->limit_height = limit_height_;
     new_struct->limit_width = limit_width_;
     //new_struct->leds = (CRGB*)((uint8_t*)new_struct + struct_size);
-    memset(new_struct->leds, 0, leds_size);
+    for (int i = 0; i < 64; i++)
+        new_struct->leds[i] = COLOR_BLACK;
     return new_struct;
 }
 
@@ -29,22 +33,19 @@ void set_led(void* led_object, uint8_t x, uint8_t y, Colorcode colorcode) {
     safe_led* led_object_casted = (safe_led*) led_object;
     if (led_object_casted->limit_height < y || led_object_casted->limit_width < x)
         return;
-    int edge_length = (int)sqrt(led_object_casted->size);
-    led_object_casted->leds[x + edge_length * y] = CRGB(colorcode.value);
+    if (led_object_casted->limit_height < y || led_object_casted->limit_width < x)
+        return;
+    led_object_casted->leds[x + 8 * y] = colorcode;
 }
 
-Colorcode get_led(void* led_object, uint8_t x, uint8_t y) {
+void set_all(void* led_object, Colorcode colorcode) {
     safe_led* led_object_casted = (safe_led*) led_object;
-    int edge_length = (int)sqrt(led_object_casted->size);
-    auto led_to_unpack = led_object_casted->leds[x + edge_length * y];
-    Colorcode newstruct = {};
-    newstruct.components.r = led_to_unpack.red;
-    newstruct.components.b = led_to_unpack.blue;
-    newstruct.components.g = led_to_unpack.green;
-    return newstruct;
+    for (int i = 0; i < 64; i++) {
+        led_object_casted->leds[i] = colorcode;
+    }
 }
 
-CRGB* get_led_arr(void* led_object) {
+Colorcode* get_led_arr(void* led_object) {
     safe_led* led_object_casted = (safe_led*) led_object;
     return led_object_casted->leds;
 }
