@@ -1,0 +1,8 @@
+since the led info only starts at the 5th byte one can get the first adress of the first led like so:
+void* adress = ((char*) led_object + 4)
+
+to add a color to it however one needs to cast adress to the type of the value or else we would only change one
+byte of a multi byte type
+
+*((Colorcode*) adress) = color;
+
