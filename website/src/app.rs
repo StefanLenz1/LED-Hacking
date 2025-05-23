@@ -79,7 +79,8 @@ pub fn App() -> impl IntoView {
 #[component]
 fn HomePage() -> impl IntoView {
     view! {
-    <div class="main_box">
+	<div class="main_box">
+	<div class="padding">    
      <div class="responsive-size">
 
       <div class="title_box">
@@ -88,6 +89,7 @@ fn HomePage() -> impl IntoView {
       <ChallangeList/>
       //<Challange name="test"/>
      </div>
-    </div>
+	    </div>
+	    </div>
      }
 }

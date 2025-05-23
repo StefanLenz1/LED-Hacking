@@ -92,16 +92,15 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
 
     view! {
     <ActionForm action=submit_code attr:class="from">
-        <div>
+        <div class="buttons">
         <input type="submit" value="upload"/>
-        <input type="text" name="content"></input>
-        </div>
-
-        <div>
         <ActionForm action=reset_controller>
-          <input type="submit" value="reset"/>
+            <input type="submit" value="reset"/>
         </ActionForm>
         </div>
+	    <div class="text_container">
+            <textarea name="content" placeholder="Input your Code here"></textarea>
+	    </div>
         //bind:value=(code_input, set_code_input)
         //value={code_input}
     //<div class="reset_button">
@@ -138,23 +137,25 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
     // </div>
 
         <div class="input_field">
-        </div>
-        <p> "current input:" {code_input} </p>
-        <div >  {
-        challange_name.clone()
-        } </div>
+            </div>
+	    <div class="log_window">
+            <p> "current input:" {code_input} </p>
+            <div >  {
+		challange_name.clone()
+            } </div>
 
-        <div> {
-        challange.id
+            <div> {
+		challange.id
 
-        } </div>
+            } </div>
 
-        <div> {
-        challange_content_given.clone()
+            <div> {
+		challange_content_given.clone()
 
-        } </div>
+            } </div>
 
-        <CodeView/>
+            <CodeView/>
+	    </div>    
     }
 }
 
@@ -162,12 +163,14 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
 pub fn ChallangePageHeader() -> impl IntoView {
     view! {
     <div class="ide">
-        <div class="tabs">
-        <A href="">USER TAB</A>
-        <A href="given">GIVEN TAB</A>
-        </div>
-        <Outlet/>
-        </div>
+	    <div class="padding">
+            <div class="tabs">
+            <A href="">USER TAB</A>
+            <A href="given">GIVEN TAB</A>
+            </div>
+            <Outlet/>
+            </div>
+	    </div>
     }
 }
 #[component]

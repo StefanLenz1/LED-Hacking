@@ -13,13 +13,15 @@ $color-list: #11111b;
 
 $color-name: #313244;
 
+$color-input: #181825;
+
 html{
     font-size: 62.5%;
 }
 
 body {
     margin: 0;
-    height: 100vh;
+    height: 100%;
     display: grid;
     font-size: 1.6rem;
     place-items: center;
@@ -33,18 +35,33 @@ body {
     color: $color-text;
 }
 
+main {
+    width: 100%;
+    height: 100%;
+}
+
 .hidden{
     visibility: hidden;
 }
 
-.main_box {
-    width: 40vw;
-    padding: 3rem;
+.main_box {    
+    // width: 40vw;
+    width: 100%;
+    height: 100%;
+    // padding: 3rem;
     overflow-y: hidden;
     overflow-x: hidden;
     position: relative;
     border-radius: 3rem;
-    background: $color-container;
+    display: grid;
+    place-items: center;
+
+    .padding {
+	width: 40vw;
+	padding: 5rem;
+	// height: 30vw;
+	background: $color-container;
+    }
     
     .title_box {
 	.heading {
@@ -65,9 +82,10 @@ body {
 	flex-direction: column;
 	counter-reset: my-counter;
 
-	.challangec {
+	a {
 	    width: 40rem;
 	    text-align: center;
+	    text-decoration: none;
 	    color: $color-text;
 	    border-radius: 3rem;
 	    background: $color-list;
@@ -78,29 +96,94 @@ body {
 }
 
 .ide {
-    width: 100vw;
-    height: 100vw;
-    overflow-y: hidden;
-    overflow-x: hidden;
-    position: relative;
-    padding: 1rem;
+    width: 100%;
+    height: 100%;
+    // position: relative;
+    display: grid;
+    // padding: 30px;
 
-    .tabs {
-	font-size: 1.8rem;
-	margin: 0;
-	gap: 2rem;
-	padding: 0 0 1rem 0;
+    .padding {
+	// width: 100%;
+	// height: 100%;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	padding: 30px;
 	display: flex;
-	list-style: none;
-	place-items: center;
-	flex-direction: row;
-
-	a {
-	    color: $color-text;
-	}
-    }
-
-    .input_field {
+	flex-direction: column;
 	
+	.tabs {
+	    font-size: 1.8rem;
+	    margin: 0;
+	    // gap: 2rem;
+	    // padding: 1rem 0 1rem 0;
+	    display: flex;
+	    list-style: none;
+	    place-items: center;
+	    flex-direction: row;
+
+	    a {
+		color: $color-text;
+		// width: 40rem;
+		// text-align: center;
+		// border-radius: 3rem;
+		// background: $color-list;
+		// counter-increment: my-counter;
+		padding: 1.1rem 1.5rem 1.1rem 1.5rem;
+		position: relative;
+		display: inline-block;
+		text-decoration: none;
+		// padding: 15px 15px 25px;
+		border: 1px solid $color-text;
+		// border-bottom: 0;
+		// cursor: pointer;
+		font-weight: 600;
+	    }
+	}
+	
+	form {
+	    // padding: 10px 0;
+	    width: 100%;
+	    height: 100%;
+	    display: flex;
+	    flex-direction: column;
+	    
+	    .buttons {
+		display: flex;
+		flex-direction: row-reverse;
+		place-items: baseline;
+		padding: 20px 0 0 0;
+
+		input {
+		    // width: 100%;
+		    height: 20px;
+		}
+		form {
+		    display: grid;
+		    width: 50px;
+		    height: 20px;
+		}
+	    }
+	    
+	    .text_container {
+		height:100%;
+		
+		textarea {
+		    box-sizing: border-box;
+		    overflow: auto;
+		    display: block;
+		    border: none;
+		    background: $color-input;
+		    color: $color-text;
+		    height: 100%;
+		    width: 100%;
+		}
+	    }
+	}
+
+	.log_window {
+	    position: relative;
+	    // bottom: -50px;
+	    // visibility: hidden;
+	}
     }
 }
