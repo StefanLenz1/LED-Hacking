@@ -80,10 +80,10 @@ pub fn App() -> impl IntoView {
 #[component]
 fn HomePage() -> impl IntoView {
     view! {
-    <div class="centered">
+    <div class="main_box">
      <div class="responsive-size">
 
-      <div class="container">
+      <div class="title_box">
          <h1 class="heading"> ESP LSD HACKING</h1>
       </div>
       <ChallangeList/>

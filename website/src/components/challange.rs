@@ -23,9 +23,9 @@ use crate::structs::*;
 pub fn ChallangeC(challange: Challange) -> impl IntoView {
     let Challange { name, id, done } = challange;
     view! {
-             <A  href=format!{"/challange/{}", id}>
-                 <h1 class="challangec">{name.to_string()} </h1>
-             </A>
+            <A  href=format!{"/challange/{}", id}>
+            <h1 class="challangec">{name.to_string()} </h1>
+            </A>
     }
 }
 
@@ -64,47 +64,52 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
     //</ActionFrom>
 
     view! {
-    <div>
-       <button>reset</button>
-    </div>
+	<div class="reset_button">
+	    <button>reset</button>
+	    </div>
 
+	// <div>
+	//    <div>USER TAB</div>
+	//    <div>GIVEN TAB</div>
+	//    <button>reset</button>
+	// </div>
 
-    <div>
-       <div>USER TAB</div>
-       <div>GIVEN TAB</div>
-       <button>reset</button>
-    </div>
-
-    <input type="text"
+	    <div class="input_field">
+	    <input type="text"
         //bind:value=(code_input, set_code_input)
-        bind:value=(code_input, set_code_input)
+            bind:value=(code_input, set_code_input)
         //value={code_input}
-        />
-    <p> "current input:" {code_input} </p>
-    <div >  {
-        challange_name.clone()
-    } </div>
+            />
+	    </div>
+	    <p> "current input:" {code_input} </p>
+	    <div >  {
+		challange_name.clone()
+	    } </div>
 
-    <div> {
-        challange.id
+	    <div> {
+		challange.id
 
-    } </div>
+	    } </div>
 
-    <div> {
-        challange_content_given.clone()
+	    <div> {
+		challange_content_given.clone()
 
-    } </div>
+	    } </div>
 
-    <CodeView/>
-       }
+	    <CodeView/>
+    }
 }
 
 #[component]
 pub fn ChallangePageHeader() -> impl IntoView {
     view! {
-       <A href="">USER TAB</A>
-       <A href="given">GIVEN TAB</A>
-       <Outlet/>
+	<div class="ide">
+	    <div class="tabs">
+	    <A href="">USER TAB</A>
+	    <A href="given">GIVEN TAB</A>
+	    </div>
+	    <Outlet/>
+	    </div>
     }
 }
 
