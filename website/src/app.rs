@@ -61,8 +61,15 @@ pub fn App() -> impl IntoView {
             .into_view()
         } >
                     <Route path=path!("/") view=HomePage/>
-                    <Route path=path!("/challange") view =ChallangeList/>
-                    <Route path=path!("/challange/:id") view=ChallangePage/>
+                    //<ParentRoute path=path!("/challange") view =ChallangeList>
+                    <ParentRoute path=path!("/challange") view=||view!{ <Outlet/>}>
+                       <ParentRoute path=path!(":id") view=ChallangePageHeader>
+                         <Route path=path!("") view=ChallangePage/>
+                         <Route path=path!("given") view=||view!{<div> TBD </div>} />
+
+                       </ParentRoute>
+                       <Route path=path!("") view=|| view!{} />
+                    </ParentRoute>
                 </Routes>
             </main>
         </Router>
