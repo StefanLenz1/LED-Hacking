@@ -110,6 +110,13 @@ main {
 	padding: 30px;
 	display: flex;
 	flex-direction: column;
+
+	.challange_name {
+	    font-size: 4rem;
+	    text-align: center;
+	    padding: 0 0 10px 0;
+	    font-weight: 600;
+	}
 	
 	.tabs {
 	    font-size: 1.8rem;
@@ -151,7 +158,7 @@ main {
 		display: flex;
 		flex-direction: row-reverse;
 		place-items: baseline;
-		padding: 20px 0 0 0;
+		// padding: 20px 0 0 0;
 
 		input {
 		    // width: 100%;
