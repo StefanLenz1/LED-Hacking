@@ -1,3 +1,4 @@
+use crate::components::challange::components::A;
 use crate::components::*;
 use crate::error_template::{AppError, ErrorTemplate};
 use leptos::prelude::*;
@@ -18,9 +19,12 @@ use std::cmp::{max, min};
 use crate::structs::*;
 
 #[component]
-pub fn ChallangeC(name: impl ToString) -> impl IntoView {
+pub fn ChallangeC(challange: Challange) -> impl IntoView {
+    let Challange { name, id, done } = challange;
     view! {
-             <h1 class="challangec"> {name.to_string()}</h1>
+             <A  href=format!{"/challange/{}", id}>
+                 <h1 class="challangec">{name.to_string()} </h1>
+             </A>
     }
 }
 
@@ -94,7 +98,6 @@ pub fn ChallangePage() -> impl IntoView {
         <Await
         future =get_challange_site(id())
         let:data
-
             >
             <ChallangeSite data=data.as_ref().unwrap()/>
 
@@ -125,7 +128,7 @@ pub fn ChallangeList() -> impl IntoView {
       {
 
           data.to_owned().unwrap_or_default().into_iter().map(|m| view! {
-      <ChallangeC name={m.name}/>
+      <ChallangeC challange=m/>
           }).collect_view()
      }
       </Await>
