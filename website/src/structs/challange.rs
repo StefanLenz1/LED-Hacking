@@ -2,6 +2,7 @@ use crate::components::*;
 
 use crate::error_template::{AppError, ErrorTemplate};
 use leptos::Params;
+use std::collections::HashMap;
 use leptos::*;
 use leptos::*;
 use leptos::*;
@@ -35,7 +36,8 @@ pub struct ChallangeWContent {
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct ChallangeContent {
-    pub given: String,
+    pub tips: Vec<String>,
+    pub code_context: HashMap<String, String>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -53,7 +55,7 @@ pub struct ChallangeSubmit {
 }
 
 impl ChallangeWContent {
-    pub fn new(name: impl ToString, id: u64, content_given: impl ToString) -> Self {
+    pub fn new(name: impl ToString, id: u64, content_given: Vec<String>, code_context: HashMap<String, String>) -> Self {
         Self {
             challange: Challange {
                 name: name.to_string(),
@@ -61,7 +63,8 @@ impl ChallangeWContent {
                 done: false,
             },
             content: ChallangeContent {
-                given: content_given.to_string(),
+                tips: content_given,
+                code_context: code_context,
             },
         }
     }
