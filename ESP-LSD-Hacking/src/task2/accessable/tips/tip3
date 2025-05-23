@@ -1,0 +1,4 @@
+Trying to do pointer arithmetic on the void* object handle results in nothing. That is because
+pointer arithmetic relies on pointer types to calculate the offset and void* is zero. If one
+however wants to get 1 Byte control they can cast the pointer to a one byte typ. 
+char* led_object_casted = (char*) led_object

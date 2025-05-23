@@ -1,0 +1,4 @@
+The top left led (Which is the first LED) shines white. In RGB white means 0xFFFFFF however the first 0xFF appears
+only in the 5th byte of the struct. Up to 260 there are a lot of zeros (Which is off in RGB) and then there are
+260: 5 and 261: 6 which are the limits. Afterwards there seem to be garbage values. So the info for the
+leds seem to be between "4" and "259" before and after a other variables
