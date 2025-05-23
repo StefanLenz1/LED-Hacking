@@ -3,6 +3,7 @@ use crate::components::*;
 use crate::error_template::{AppError, ErrorTemplate};
 use leptos::prelude::*;
 use leptos::prelude::*;
+use leptos::task::spawn_local;
 use leptos::Params;
 use leptos::*;
 use leptos::*;
@@ -16,6 +17,8 @@ use leptos_router::*;
 use leptos_use::{use_interval, UseIntervalReturn};
 use serde::{self, Deserialize, Serialize};
 use std::cmp::{max, min};
+use std::fs::File;
+use std::io::Write;
 
 use crate::structs::*;
 
@@ -38,8 +41,22 @@ pub async fn get_challange_site(id: u64) -> Result<ChallangeWContent, ServerFnEr
     ));
 }
 
-#[server]
+#[server(GetChallangeSiteHint)]
+pub async fn get_challange_site_hint(id: u64) -> Result<String, ServerFnError> {
+    Ok(format!("hint for challange number {}", (id)).to_string())
+}
+
+#[server(SubmitCode)]
 pub async fn submit_code(content: String) -> Result<(), ServerFnError> {
+    let mut file = File::create("/tmp/foo.txt")?;
+    //file.write_all(content)?;
+    println!("server function called");
+    write!(file, "{}", content);
+    Ok(())
+}
+
+#[server(ResetController)]
+pub async fn reset_controller() -> Result<(), ServerFnError> {
     Ok(())
 }
 
@@ -59,57 +76,97 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
     } = challange;
     //let code_input = RwSignal::new("init".to_string());
     let (code_input, set_code_input) = signal("init".to_string());
+    let submit_code = ServerAction::<SubmitCode>::new();
+    let value = submit_code.value();
+    let has_error = move || value.with(|val| matches!(val, Some(Err(_))));
+
+    let reset_controller = ServerAction::<ResetController>::new();
+    let clear_code = Action::new(|_: &()| async move {});
 
     //<ActionFrom action=submit_code>
     //</ActionFrom>
 
     view! {
-	<div class="reset_button">
-	    <button>reset</button>
-	    </div>
-
-	// <div>
-	//    <div>USER TAB</div>
-	//    <div>GIVEN TAB</div>
-	//    <button>reset</button>
-	// </div>
-
-	    <div class="input_field">
-	    <input type="text"
+    <ActionForm action=submit_code>
+        <input type="submit" value="upload"/>
+        <input type="text" name="content"
         //bind:value=(code_input, set_code_input)
-            bind:value=(code_input, set_code_input)
         //value={code_input}
-            />
-	    </div>
-	    <p> "current input:" {code_input} </p>
-	    <div >  {
-		challange_name.clone()
-	    } </div>
+            ></input>
+    //<div class="reset_button">
+    //   <button>reset</button>
+    //</div>
+       //<button on:click=move |_| {
+       //    println!("button clicked");
+       //     spawn_local(async {
+       //         submit_code("testlkjllakjflöajdflöajkdflöj".to_string()).await;
+       //     });}
+       //>upload code</button>
+    </ActionForm>
+    //<Form action=clear_code>
+      <button on:click= move |_| {
+      }>reset</button>
+    //</ActionForm>
 
-	    <div> {
-		challange.id
+    // <div>
+    //    <div>USER TAB</div>
+    //    <div>GIVEN TAB</div>
+    //    <button>reset</button>
+    // </div>
 
-	    } </div>
+        <div class="input_field">
+        </div>
+        <p> "current input:" {code_input} </p>
+        <div >  {
+        challange_name.clone()
+        } </div>
 
-	    <div> {
-		challange_content_given.clone()
+        <div> {
+        challange.id
 
-	    } </div>
+        } </div>
 
-	    <CodeView/>
+        <div> {
+        challange_content_given.clone()
+
+        } </div>
+
+        <CodeView/>
     }
 }
 
 #[component]
 pub fn ChallangePageHeader() -> impl IntoView {
     view! {
-	<div class="ide">
-	    <div class="tabs">
-	    <A href="">USER TAB</A>
-	    <A href="given">GIVEN TAB</A>
-	    </div>
-	    <Outlet/>
-	    </div>
+    <div class="ide">
+        <div class="tabs">
+        <A href="">USER TAB</A>
+        <A href="given">GIVEN TAB</A>
+        </div>
+        <Outlet/>
+        </div>
+    }
+}
+#[component]
+pub fn ChallangePageGiven() -> impl IntoView {
+    let params = use_params::<ChallangeSiteParams>();
+    let id = move || params.get().unwrap().id.unwrap();
+
+    view! {
+        <Await
+        future =get_challange_site_hint(id())
+        let:data
+            >
+            <ChallangeSiteHint data=data.as_ref().unwrap()/>
+        </Await>
+    }
+}
+
+#[component]
+
+pub fn ChallangeSiteHint<'a>(data: &'a String) -> impl IntoView {
+    view! {
+        <div> {data.clone()} </div>
     }
 }
 
@@ -119,16 +176,11 @@ pub fn ChallangePage() -> impl IntoView {
 
     let id = move || params.get().unwrap().id.unwrap();
     view! {
-
-
         <Await
         future =get_challange_site(id())
         let:data
             >
             <ChallangeSite data=data.as_ref().unwrap()/>
-
-
-
         </Await>
     }
 }
