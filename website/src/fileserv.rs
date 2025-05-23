@@ -12,6 +12,7 @@ use tower::ServiceExt;
 use tower_http::services::ServeDir;
 
 pub async fn file_and_error_handler(
+    uri: Uri,
     State(options): State<LeptosOptions>,
     req: Request<Body>,
 ) -> AxumResponse {

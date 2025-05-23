@@ -1,11 +1,33 @@
 #[tokio::main]
 #[cfg(feature = "ssr")]
 async fn main() {
+    pub fn shell(options: LeptosOptions) -> impl IntoView {
+        view! {
+            <!DOCTYPE html>
+            <html lang="en">
+                <head>
+                    <meta charset="utf-8"/>
+                    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                    <AutoReload options=options.clone() />
+                    <HydrationScripts options/>
+                    <link rel="stylesheet" id="leptos" href="/pkg/esp-lsd-hacking.css"/>
+                    <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
+                    <MetaTags/>
+                </head>
+                <body>
+                    <App/>
+                </body>
+            </html>
+        }
+    }
     use axum::Router;
     use esp_lsd_hacking::app::*;
+    use leptos::prelude::*;
+    use leptos_meta::*;
     //use esp_lsd_hacking::fileserv::file_and_error_handler;
     use leptos::prelude::get_configuration;
     use leptos::*;
+
     use leptos_axum::{file_and_error_handler, generate_route_list, LeptosRoutes};
 
     // Setting get_configuration(None) means we'll be using cargo-leptos's env values
@@ -21,7 +43,7 @@ async fn main() {
     // build our application with a route
     let app = Router::new()
         .leptos_routes(&leptos_options, routes, App)
-        //.fallback(leptos_axum::file_and_error_handler)
+        .fallback(file_and_error_handler(shell))
         .with_state(leptos_options);
 
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
