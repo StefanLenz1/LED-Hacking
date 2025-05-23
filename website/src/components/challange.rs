@@ -1,5 +1,6 @@
 use crate::components::*;
 use crate::error_template::{AppError, ErrorTemplate};
+use leptos::Params;
 use leptos::*;
 use leptos::*;
 use leptos::*;
@@ -31,12 +32,31 @@ pub async fn get_challange_site(id: u64) -> Result<ChallangeWContent, ServerFnEr
 
 #[component]
 pub fn ChallangeSite() -> impl IntoView {
+    //let params = use_params_map();
+    let params = use_params::<ChallangeSiteParams>();
+
+    // id: || -> usize
+    //let id = move || {
+    //    params
+    //        .read()
+    //        .as_ref()
+    //        .ok()
+    //        .and_then(|params| params.id)
+    //        .unwrap_or_default()
+    //};
     view! {
         <Await
         future =|| get_challange_site(1)
         let:data
+
             >
-            <div> {data.to_owned().unwrap().challange.id} </div>
+            <div> {
+
+                let id = move || params.get().unwrap().id;
+                id
+
+            } </div>
+
             <CodeView/>
         </Await>
     }

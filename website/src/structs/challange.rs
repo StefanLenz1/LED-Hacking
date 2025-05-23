@@ -1,5 +1,6 @@
 use crate::components::*;
 use crate::error_template::{AppError, ErrorTemplate};
+use leptos::Params;
 use leptos::*;
 use leptos::*;
 use leptos::*;
@@ -19,8 +20,9 @@ impl Challange {
         }
     }
 }
+#[derive(Serialize, Deserialize, Params, PartialEq, Clone)]
 pub struct ChallangeSiteParams {
-    pub id: u64,
+    pub id: Option<u64>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
