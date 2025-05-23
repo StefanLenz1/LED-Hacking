@@ -2,12 +2,11 @@
 #include "internal.h"
 #include <stdlib.h>
 
-struct __attribute__((packed)) safe_led {
+struct safe_led {
+    uint8_t size;
+    Colorcode leds[64];
     uint8_t limit_width;
     uint8_t limit_height;
-    Colorcode leds[64];
-    uint8_t size;
-
 };
 
 void* create_safe_led(int led_count, uint8_t limit_width_, uint8_t limit_height_) {
@@ -19,9 +18,6 @@ void* create_safe_led(int led_count, uint8_t limit_width_, uint8_t limit_height_
     new_struct->size = led_count;
     new_struct->limit_height = limit_height_;
     new_struct->limit_width = limit_width_;
-    //new_struct->leds = (CRGB*)((uint8_t*)new_struct + struct_size);
-    for (int i = 0; i < 64; i++)
-        new_struct->leds[i] = COLOR_BLACK;
     return new_struct;
 }
 

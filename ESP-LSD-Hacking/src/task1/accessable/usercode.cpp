@@ -4,6 +4,10 @@
 
 
 
+void set_led_wrapper(void *led_object, int x, int y, Colorcode color) {
+    set_led(led_object, x, y, color);
+}
+
 const uint64_t IMAGES[] = {
   0x0000000000000000,
   0x3c4299a581a5423c
@@ -16,9 +20,9 @@ void display_image(uint64_t image, void* led_object) {
         for (int x = 0; x < 8; x++) {
             int bit_index = y * 8 + x;
             if ((image >> bit_index) & 1) {
-                set_led(led_object, x, y, COLOR_RED);
+                set_led_wrapper(led_object, x, y, COLOR_RED);
             } else {
-                set_led(led_object, x, y, COLOR_BLACK);
+                set_led_wrapper(led_object, x, y, COLOR_BLACK);
             }
         }
     }
@@ -34,20 +38,10 @@ void make_pattern(void* led_object) {
 
     image_loop(led_object);
 
-    //set_led(led_object, 0, 0, COLOR_BLUE);
-    //set_led(led_object, 0, 7, COLOR_BLUE);
-    //set_led(led_object, 1, 1, COLOR_BLUE);
-    // set_led(led_object, 7, 7, COLOR_BLUE);
-    // set_led(led_object, 0, 1, COLOR_WHITE);
-    // set_led(led_object, 1, 0, COLOR_WHITE);
-    /*for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-            set_led(led_object, i, j, COLOR_GREEN);
-        
-    set_led(led_object, 6, 6, COLOR_BLUE);*/
-            // Colorcode get_cell = get_led(led_object, 0, 0);
-    // if (color_equal(get_cell, COLOR_BLUE))
-    //     set_led(led_object, 0, 0, COLOR_RED);
-    // else
-    //     set_led(led_object, 0, 0, COLOR_BLUE);
+    set_led_wrapper(led_object, 0, 0, COLOR_WHITE);
+    set_led_wrapper(led_object, 0, 7, COLOR_BLUE);
+    set_led_wrapper(led_object, 1, 1, COLOR_BLUE);
+    set_led_wrapper(led_object, 7, 7, COLOR_BLUE);
+    set_led_wrapper(led_object, 0, 1, COLOR_WHITE);
+    set_led_wrapper(led_object, 1, 0, COLOR_WHITE);
 }
