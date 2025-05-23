@@ -17,6 +17,7 @@ use leptos_router::*;
 use leptos_use::{use_interval, UseIntervalReturn};
 use serde::{self, Deserialize, Serialize};
 use std::cmp::{max, min};
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::Write;
 
@@ -37,13 +38,20 @@ pub async fn get_challange_site(id: u64) -> Result<ChallangeWContent, ServerFnEr
     return Ok(ChallangeWContent::new(
         format!("challange number {}", (id)),
         id,
-        format!("content start {} content end", id),
+        vec![format!("content start {} content end", id)],
+        HashMap::from([("code file one".to_string(), "code file two".to_string())]),
     ));
 }
 
 #[server(GetChallangeSiteHint)]
-pub async fn get_challange_site_hint(id: u64) -> Result<String, ServerFnError> {
-    Ok(format!("hint for challange number {}", (id)).to_string())
+pub async fn get_challange_site_hints(id: u64) -> Result<Vec<String>, ServerFnError> {
+    Ok(vec![
+        format!("A hint for challange number {}", (id)).to_string(),
+        format!("B hint for challange number {}", (id)).to_string(),
+        format!("C hint for challange number {}", (id)).to_string(),
+        format!("D hint for challange number {}", (id)).to_string(),
+        format!("E hint for challange number {}", (id)).to_string(),
+    ])
 }
 
 #[server(SubmitCode)]
@@ -68,7 +76,8 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
         content: challange_content,
     } = data;
     let ChallangeContent {
-        given: challange_content_given,
+        tips: tips,
+        code_context: code_context,
     } = challange_content;
     let Challange {
         id: challange_id,
@@ -76,11 +85,8 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
         done: challange_done,
     } = challange;
     //let code_input = RwSignal::new("init".to_string());
-    let (code_input, set_code_input) = signal("init".to_string());
     let submit_code = ServerAction::<SubmitCode>::new();
     let value = submit_code.value();
-    let has_error = move || value.with(|val| matches!(val, Some(Err(_))));
-    let (count, set_count) = signal(0);
 
     let reset_controller = ServerAction::<ResetController>::new();
     //let clear_code = Action::new(move |_: &()| async move { async move { reset_controller().await } });
@@ -88,9 +94,12 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
     //<ActionFrom action=submit_code>
     //</ActionFrom>
     //
-    let (reset_count, reset_count_set) = signal(0);
 
     view! {
+
+            <div >  {
+        challange_name.clone()
+            } </div>
     <ActionForm action=submit_code attr:class="from">
         <div class="buttons">
         <input type="submit" value="upload"/>
@@ -98,79 +107,36 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
             <input type="submit" value="reset"/>
         </ActionForm>
         </div>
-	    <div class="text_container">
+        <div class="text_container">
             <textarea name="content" placeholder="Input your Code here"></textarea>
-	    </div>
-        //bind:value=(code_input, set_code_input)
-        //value={code_input}
-    //<div class="reset_button">
-    //   <button>reset</button>
-    //</div>
-       //<button on:click=move |_| {
-       //    println!("button clicked");
-       //     spawn_local(async {
-       //         submit_code("testlkjllakjflöajdflöajkdflöj".to_string()).await;
-       //     });}
-       //>upload code</button>
-       //
+        </div>
     </ActionForm>
-
-
-    //<Form action=clear_code>
-     // <button
-     // on:click=move |_| reset_count_set.set(2)
-     // //{
-     //     //clear_code.dispatch(());
-
-     //     //println!("dispatched action");
-     // //}
-     // > "reset" </button>
-     //<p> {move || reset_count.get()} </p>
-
-     //<p>{move || { if clear_code.pending().get() {"pendig..."} else {"not pending"}}}</p>
-    //</ActionForm>
-
-    // <div>
-    //    <div>USER TAB</div>
-    //    <div>GIVEN TAB</div>
-    //    <button>reset</button>
-    // </div>
-
-        <div class="input_field">
-            </div>
-	    <div class="log_window">
-            <p> "current input:" {code_input} </p>
-            <div >  {
-		challange_name.clone()
-            } </div>
-
-            <div> {
-		challange.id
-
-            } </div>
-
-            <div> {
-		challange_content_given.clone()
-
-            } </div>
-
-            <CodeView/>
-	    </div>    
+        //<div class="log_window">
+        //</div>
     }
 }
 
 #[component]
 pub fn ChallangePageHeader() -> impl IntoView {
+    let params = use_params::<ChallangeSiteParams>();
+    let id = move || params.get().unwrap().id.unwrap();
     view! {
     <div class="ide">
-	    <div class="padding">
+
+        <div class="padding">
+        <Await
+        future =get_challange_site(id())
+        let:data
+            >
+            <div> {data.clone().unwrap().challange.name}</div>
+        </Await>
             <div class="tabs">
             <A href="">USER TAB</A>
             <A href="given">GIVEN TAB</A>
             </div>
             <Outlet/>
             </div>
-	    </div>
+        </div>
     }
 }
 #[component]
@@ -180,7 +146,7 @@ pub fn ChallangePageGiven() -> impl IntoView {
 
     view! {
         <Await
-        future =get_challange_site_hint(id())
+        future =get_challange_site_hints(id())
         let:data
             >
             <ChallangeSiteHint data=data.as_ref().unwrap()/>
@@ -190,9 +156,13 @@ pub fn ChallangePageGiven() -> impl IntoView {
 
 #[component]
 
-pub fn ChallangeSiteHint<'a>(data: &'a String) -> impl IntoView {
+pub fn ChallangeSiteHint<'a>(data: &'a Vec<String>) -> impl IntoView {
     view! {
-        <div> {data.clone()} </div>
+        {data.clone().iter().enumerate().map(|(idx, hint)| view! {
+        <div>
+        {format!("Hint {}: {}", idx + 1,  hint)}
+        </div>
+        }).collect_view()}
     }
 }
 
