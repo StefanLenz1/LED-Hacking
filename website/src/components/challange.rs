@@ -1,11 +1,14 @@
 use crate::components::*;
 use crate::error_template::{AppError, ErrorTemplate};
+use leptos::prelude::*;
+use leptos::prelude::*;
 use leptos::Params;
 use leptos::*;
 use leptos::*;
 use leptos::*;
 use leptos_meta::*;
 use leptos_meta::*;
+use leptos_router::hooks::use_params;
 use leptos_router::*;
 use leptos_router::*;
 use leptos_use::{use_interval, UseIntervalReturn};
@@ -30,8 +33,58 @@ pub async fn get_challange_site(id: u64) -> Result<ChallangeWContent, ServerFnEr
     ));
 }
 
+#[server]
+pub async fn submit_code(content: String) -> Result<(), ServerFnError> {
+    Ok(())
+}
+
 #[component]
-pub fn ChallangeSite() -> impl IntoView {
+pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
+    let ChallangeWContent {
+        challange: challange,
+        content: challange_content,
+    } = data;
+    let ChallangeContent {
+        given: challange_content_given,
+    } = challange_content;
+    let Challange {
+        id: challange_id,
+        name: challange_name,
+        done: challange_done,
+    } = challange;
+    //let code_input = RwSignal::new("init".to_string());
+    let (code_input, set_code_input) = signal("init".to_string());
+
+    //<ActionFrom action=submit_code>
+    //</ActionFrom>
+
+    view! {
+
+        <input type="text"
+            //bind:value=(code_input, set_code_input)
+            bind:value=(code_input, set_code_input)
+            //value={code_input}
+            />
+        <p> "current input:" {code_input} </p>
+        <div >  {
+            challange_name.clone()
+        } </div>
+
+              <div> {
+                  challange.id
+
+              } </div>
+
+              <div> {
+                  challange_content_given.clone()
+
+              } </div>
+
+    <CodeView/>
+           }
+}
+#[component]
+pub fn ChallangePage() -> impl IntoView {
     let params = use_params::<ChallangeSiteParams>();
 
     let id = move || params.get().unwrap().id.unwrap();
@@ -39,39 +92,14 @@ pub fn ChallangeSite() -> impl IntoView {
 
 
         <Await
-        future =move || get_challange_site(id())
+        future =get_challange_site(id())
         let:data
 
             >
-
-            {
-                let ChallangeWContent{challange: challange, content: challange_content} = data.as_ref().unwrap();
-                let ChallangeContent{given: challange_content_given} = challange_content;
-                let Challange{id: challange_id , name: challange_name, done: challange_done} = challange;
+            <ChallangeSite data=data.as_ref().unwrap()/>
 
 
 
-                view!{
-                      <div > {
-
-                          challange_name
-                      } </div>
-
-                      <div> {
-
-                          challange.id
-
-                      } </div>
-
-                      <div> {
-
-                          challange_content_given
-
-                      } </div>
-                   }
-             }
-
-            <CodeView/>
         </Await>
     }
 }
@@ -91,7 +119,7 @@ pub fn ChallangeList() -> impl IntoView {
       <ul class="challanges" role="list">
 
       <Await
-        future =|| get_challanges()
+        future = get_challanges()
         let:data
       >
       {

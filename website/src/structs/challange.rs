@@ -1,4 +1,5 @@
 use crate::components::*;
+
 use crate::error_template::{AppError, ErrorTemplate};
 use leptos::Params;
 use leptos::*;
@@ -6,6 +7,7 @@ use leptos::*;
 use leptos::*;
 use leptos_meta::*;
 use leptos_meta::*;
+use leptos_router::params::Params;
 use leptos_router::*;
 use leptos_router::*;
 use leptos_use::{use_interval, UseIntervalReturn};
