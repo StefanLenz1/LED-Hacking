@@ -10,6 +10,7 @@ use leptos::*;
 use leptos_meta::*;
 use leptos_meta::*;
 use leptos_router::hooks::use_params;
+use leptos_router::nested_router::Outlet;
 use leptos_router::*;
 use leptos_router::*;
 use leptos_use::{use_interval, UseIntervalReturn};
@@ -63,6 +64,9 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
     //</ActionFrom>
 
     view! {
+    <div>
+       <button>reset</button>
+    </div>
 
         <input type="text"
             //bind:value=(code_input, set_code_input)
@@ -87,6 +91,16 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
     <CodeView/>
            }
 }
+
+#[component]
+pub fn ChallangePageHeader() -> impl IntoView {
+    view! {
+       <A href="">USER TAB</A>
+       <A href="given">GIVEN TAB</A>
+       <Outlet/>
+    }
+}
+
 #[component]
 pub fn ChallangePage() -> impl IntoView {
     let params = use_params::<ChallangeSiteParams>();
