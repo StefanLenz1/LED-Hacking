@@ -57,6 +57,7 @@ pub async fn submit_code(content: String) -> Result<(), ServerFnError> {
 
 #[server(ResetController)]
 pub async fn reset_controller() -> Result<(), ServerFnError> {
+    println!("resetting controller");
     Ok(())
 }
 
@@ -79,20 +80,30 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
     let submit_code = ServerAction::<SubmitCode>::new();
     let value = submit_code.value();
     let has_error = move || value.with(|val| matches!(val, Some(Err(_))));
+    let (count, set_count) = signal(0);
 
     let reset_controller = ServerAction::<ResetController>::new();
-    let clear_code = Action::new(|_: &()| async move {});
+    //let clear_code = Action::new(move |_: &()| async move { async move { reset_controller().await } });
 
     //<ActionFrom action=submit_code>
     //</ActionFrom>
+    //
+    let (reset_count, reset_count_set) = signal(0);
 
     view! {
-    <ActionForm action=submit_code>
+    <ActionForm action=submit_code attr:class="from">
+        <div>
         <input type="submit" value="upload"/>
-        <input type="text" name="content"
+        <input type="text" name="content"></input>
+        </div>
+
+        <div>
+        <ActionForm action=reset_controller>
+          <input type="submit" value="reset"/>
+        </ActionForm>
+        </div>
         //bind:value=(code_input, set_code_input)
         //value={code_input}
-            ></input>
     //<div class="reset_button">
     //   <button>reset</button>
     //</div>
@@ -102,10 +113,22 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
        //         submit_code("testlkjllakjflöajdflöajkdflöj".to_string()).await;
        //     });}
        //>upload code</button>
+       //
     </ActionForm>
+
+
     //<Form action=clear_code>
-      <button on:click= move |_| {
-      }>reset</button>
+     // <button
+     // on:click=move |_| reset_count_set.set(2)
+     // //{
+     //     //clear_code.dispatch(());
+
+     //     //println!("dispatched action");
+     // //}
+     // > "reset" </button>
+     //<p> {move || reset_count.get()} </p>
+
+     //<p>{move || { if clear_code.pending().get() {"pendig..."} else {"not pending"}}}</p>
     //</ActionForm>
 
     // <div>
