@@ -64,28 +64,35 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
 
     view! {
 
-        <input type="text"
-            //bind:value=(code_input, set_code_input)
-            bind:value=(code_input, set_code_input)
-            //value={code_input}
-            />
-        <p> "current input:" {code_input} </p>
-        <div >  {
-            challange_name.clone()
-        } </div>
 
-              <div> {
-                  challange.id
+    <div>
+       <div>USER TAB</div>
+       <div>GIVEN TAB</div>
+       <button>reset</button>
+    </div>
 
-              } </div>
+    <input type="text"
+        //bind:value=(code_input, set_code_input)
+        bind:value=(code_input, set_code_input)
+        //value={code_input}
+        />
+    <p> "current input:" {code_input} </p>
+    <div >  {
+        challange_name.clone()
+    } </div>
 
-              <div> {
-                  challange_content_given.clone()
+    <div> {
+        challange.id
 
-              } </div>
+    } </div>
+
+    <div> {
+        challange_content_given.clone()
+
+    } </div>
 
     <CodeView/>
-           }
+       }
 }
 #[component]
 pub fn ChallangePage() -> impl IntoView {
