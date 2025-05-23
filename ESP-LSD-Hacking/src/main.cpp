@@ -9,7 +9,7 @@
 #define NUMPIXELS 64
 
 #define LIMIT_WIDTH 6
-#define LIMIT_HEIGHT 5
+#define LIMIT_HEIGHT 7
 
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
@@ -33,7 +33,7 @@ void dump_bytes(void* ptr, size_t count) {
 
 void loop() {
     pixels.clear();
-    dump_bytes(led_handler, 200);
+    dump_bytes(led_handler, 400);
     make_pattern(led_handler);
     Colorcode* led_array = get_led_arr(led_handler);
     //set_all(led_handler, COLOR_BLUE);
