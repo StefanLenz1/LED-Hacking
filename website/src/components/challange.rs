@@ -97,9 +97,6 @@ pub fn ChallangeSite<'a>(data: &'a ChallangeWContent) -> impl IntoView {
 
     view! {
 
-            <div >  {
-        challange_name.clone()
-            } </div>
     <ActionForm action=submit_code attr:class="from">
         <div class="buttons">
         <input type="submit" value="upload"/>
@@ -128,7 +125,7 @@ pub fn ChallangePageHeader() -> impl IntoView {
         future =get_challange_site(id())
         let:data
             >
-            <div> {data.clone().unwrap().challange.name}</div>
+            <div class="challange_name"> {data.clone().unwrap().challange.name}</div>
         </Await>
             <div class="tabs">
             <A href="">USER TAB</A>
