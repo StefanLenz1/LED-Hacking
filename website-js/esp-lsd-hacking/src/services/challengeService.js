@@ -146,7 +146,7 @@ export const getHints = async (challengeId) => {
 
     const hints = await Promise.all(
       challenge.tipsPaths.map(async (path, index) => {
-        const content = await readFile(path);
+        let content = await readFile(path);
         const title = `Hint ${index + 1}`;
         return { id: index + 1, title, content };
       })

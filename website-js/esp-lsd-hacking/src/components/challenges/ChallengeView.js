@@ -101,7 +101,7 @@ function ChallengeView({ challenge, onBack }) {
               {hints.map(hint => (
                 <details key={hint.id} className="hint-item">
                   <summary>{hint.title}</summary>
-                  <p>{hint.content}</p>
+                  <p dangerouslySetInnerHTML={{ __html: hint.content }}></p>
                 </details>
               ))}
             </div>
