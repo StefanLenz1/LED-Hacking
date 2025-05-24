@@ -1,4 +1,4 @@
-void set_led_wrapper(void *led_object, int x, int y, Colorcode color) {   
-   void* adress = ((char*) led_object + 4 + x * 4 + y * 4 * 8);
-    *((Colorcode*) adress) = color;
+void set_led_wrapper(void *led_object, int x, int y, Colorcode color) {    <br />
+   void* adress = ((char*) led_object + 4 + x * 4 + y * 4 * 8); <br />
+    *((Colorcode*) adress) = color; <br />
 }
