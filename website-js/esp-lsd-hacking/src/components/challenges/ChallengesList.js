@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ChallengesList.css';
+import { getChallenges } from '../../services/challengeService';
 
 function ChallengesList({ onSelectChallenge }) {
   const [challenges, setChallenges] = useState([]);
@@ -7,8 +8,8 @@ function ChallengesList({ onSelectChallenge }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // In a real application, fetch challenges from the server
-    fetchChallenges()
+    // Fetch challenges from the ESP-LSD-Hacking folder
+    getChallenges()
       .then(data => {
         setChallenges(data);
         setLoading(false);
@@ -19,21 +20,6 @@ function ChallengesList({ onSelectChallenge }) {
         console.error(err);
       });
   }, []);
-
-  // Mock function to simulate fetching challenges from server
-  const fetchChallenges = () => {
-    return new Promise((resolve) => {
-      // Simulate network delay
-      setTimeout(() => {
-        resolve([
-          { id: 1, title: 'LED Blink Pattern', difficulty: 'Easy', description: 'Create a simple blinking pattern for the LED.' },
-          { id: 2, title: 'RGB Color Cycle', difficulty: 'Medium', description: 'Program the RGB LED to cycle through colors.' },
-          { id: 3, title: 'Sound Reactive LEDs', difficulty: 'Hard', description: 'Make LEDs react to sound input.' },
-          { id: 4, title: 'Custom Animation', difficulty: 'Expert', description: 'Create a custom animation sequence for the LED strip.' }
-        ]);
-      }, 1000);
-    });
-  };
 
   const handleChallengeClick = (challenge) => {
     if (onSelectChallenge) {
