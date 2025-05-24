@@ -155,10 +155,12 @@ pub fn ChallangePageGiven() -> impl IntoView {
 
 pub fn ChallangeSiteHint<'a>(data: &'a Vec<String>) -> impl IntoView {
     view! {
-        {data.clone().iter().enumerate().map(|(idx, hint)| view! {
-        <div>
-        {format!("Hint {}: {}", idx + 1,  hint)}
-        </div>
+        {data.clone().iter().enumerate().map(|(idx, hint)| {
+            let hint_with_br = format!("Hint {}: {}", idx + 1, hint)
+                .replace("\n", "<br>");
+            view! {
+                <div inner_html=hint_with_br></div>
+            }
         }).collect_view()}
     }
 }

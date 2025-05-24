@@ -1,13 +1,19 @@
 Die GRÜÜÜÜÜNEN haben ein Energiespargesetz erlassen, weswegen von der 8 * 8 Matrix nur 6 * 7 angesteuert 
 werden können
+<br/>
 
 The set_led function used for settings individual leds filters out x and y values above the set limit. 
 Even though both the hardware and backend would support a width and height up to 8. All set_led in
 usercode.cpp is currently calling set_led_wrapper which just calls set_led. In two lines of code one
 can replace the set_led function call with a pointer manipulation which sidesteps the limits
+<br/>
 
 Rules: 
+<br/>
 1. One is only allowed to look in files in the accessable folder
+<br/>
 2. Even though you can do it for debug purposes, the solution just requires to manipulate the body of
 "set_led_wrapper"
+<br/>
 3. The tips giving more and more information, so read them in order
+<br/>
