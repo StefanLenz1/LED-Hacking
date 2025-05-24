@@ -5,6 +5,7 @@ function CFileEditor() {
   const [code, setCode] = useState('// Write your C code here...');
   const [fileName] = useState('main.c');
   const [uploadStatus, setUploadStatus] = useState('');
+  const [resetStatus, setResetStatus] = useState('');
   const [lineCount, setLineCount] = useState(1);
   const textareaRef = useRef(null);
 
@@ -74,6 +75,37 @@ function CFileEditor() {
     }
   };
 
+  const resetMicrocontroller = async () => {
+    try {
+      setResetStatus('Resetting...');
+
+      // Send the reset request to our server endpoint
+      const response = await fetch('http://localhost:3002/api/reset-microcontroller', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        console.log('Microcontroller reset successfully');
+        setResetStatus('Reset successful!');
+
+        // Clear the status message after 3 seconds
+        setTimeout(() => {
+          setResetStatus('');
+        }, 3000);
+      } else {
+        setResetStatus(`Reset failed: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error resetting microcontroller:', error);
+      setResetStatus(`Error: ${error.message}`);
+    }
+  };
+
   // Generate line numbers
   const renderLineNumbers = () => {
     return Array.from({ length: lineCount }, (_, i) => i + 1).map(num => (
@@ -112,7 +144,11 @@ function CFileEditor() {
         <button onClick={uploadToServer} className="upload-button">
           Upload to Server
         </button>
+        <button onClick={resetMicrocontroller} className="reset-button">
+          Reset Microcontroller
+        </button>
         {uploadStatus && <div className="status-message">{uploadStatus}</div>}
+        {resetStatus && <div className="status-message">{resetStatus}</div>}
       </div>
     </div>
   );
