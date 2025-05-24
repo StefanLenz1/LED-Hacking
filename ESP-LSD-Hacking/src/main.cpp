@@ -1,19 +1,23 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 
-#define USE_TASK1
-
 #ifdef USE_TASK1
-#include "task1/hidden/internal.h"
-#include "task1/accessable/usercode.h"
-#include "task1/accessable/safe_led.h"
+#include "../tasks/task1/hidden/internal.h"
+#include "../tasks/task1/accessable/usercode.h"
+#include "../tasks/task1/accessable/safe_led.h"
 #endif
 
 #ifdef USE_TASK2
 #define INTERNAL_ACCESS
-#include "task2/hidden/internal.h"
-#include "task2/accessable/usercode.h"
-#include "task2/accessable/safe_led.hpp"
+#include "../tasks/task2/hidden/internal.h"
+#include "../tasks/task2/accessable/usercode.h"
+#include "../tasks/task2/accessable/safe_led.hpp"
+#endif
+
+#ifdef USE_TASK3
+#include "../tasks/task3/hidden/internal.h"
+#include "../tasks/task3/accessable/usercode.h"
+#include "../tasks/task3/accessable/safe_led.h"
 #endif
 
 #define PIN 6
@@ -54,9 +58,17 @@ void dump_bytes(void* ptr, size_t count) {
 
 void loop() {
     pixels.clear();
+    #ifndef USE_TASK3
     dump_bytes(&led_handler, 400);
     make_pattern(led_handler);
+    #endif
+    #ifdef USE_TASK3
+    make_pattern();
+    #endif
     
+#ifdef USE_TASK3
+Colorcode* led_array = get_led_arr();
+#endif    
 #ifdef USE_TASK2
 Colorcode* led_array = led_handler.get_led_arr();
 #endif

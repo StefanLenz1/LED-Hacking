@@ -1,0 +1,4 @@
+The led appears to be 2d but is just one long strip. So all the leds are stored in one array. 
+index = x + 8 * y 
+since there are 8 leds per row. however the index still needs to be multiplied by the size of the led
+datatype
