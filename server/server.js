@@ -1,10 +1,9 @@
-const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { exec } = require('child_process');
-
+const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3002;
 
@@ -35,7 +34,7 @@ app.post('/api/reset-microcontroller', (req, res) => {
   try {
     // Execute a bash command to reset the microcontroller
     // This is a placeholder command - replace with the actual command needed for your microcontroller
-    exec('echo "Resetting microcontroller..." && ./reset.sh > /tmp/did && sleep 1', (error, stdout, stderr) => {
+    exec('echo "Resetting microcontroller..." && ~/work/server/reset.sh	> /tmp/did && sleep 1', (error, stdout, stderr) => {
       if (error) {
         console.error(`Error executing reset command: ${error}`);
         return res.status(500).json({ success: false, message: 'Error resetting microcontroller', error: error.message });
