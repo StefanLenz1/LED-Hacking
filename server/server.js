@@ -20,6 +20,8 @@ app.post('/api/save-code', (req, res) => {
     // Write the code to /tmp/code.c
     fs.writeFileSync('/tmp/code.c', content, 'utf8');
 
+    exec("cp /tmp/code.c ~/work/ESP-LSD-Hacking/src/task1/accessable/usercode.cpp && ~/work/server/upload.sh > /tmp/out ");
+    //exec("echo test && platfromio run -d ~/work/ESP-LSD-Hacking  -c ~/work/ESP-LSD-Hacking/platform.ini > /tmp/out");
     console.log('Code written to /tmp/code.c');
     res.status(200).json({ success: true, message: 'Code saved successfully' });
   } catch (error) {
@@ -33,7 +35,7 @@ app.post('/api/reset-microcontroller', (req, res) => {
   try {
     // Execute a bash command to reset the microcontroller
     // This is a placeholder command - replace with the actual command needed for your microcontroller
-    exec('echo "Resetting microcontroller..." > /tmp/did && sleep 1', (error, stdout, stderr) => {
+    exec('echo "Resetting microcontroller..." && ./reset.sh > /tmp/did && sleep 1', (error, stdout, stderr) => {
       if (error) {
         console.error(`Error executing reset command: ${error}`);
         return res.status(500).json({ success: false, message: 'Error resetting microcontroller', error: error.message });
